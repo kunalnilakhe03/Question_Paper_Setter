@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="index.css">
+    <title>Question Paper Setter</title>
+
+    <!-- Load Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-firestore.js"></script>
+    
+</head>
+<body>
+
+    <section>
+        <div class="side-bar">
+            <div class="option">
+                <ul>
+                    <a href="./add_question.html"><li>Add Questions</li></a>
+                    <a href="./view_question.html"><li>View Questions</li></a>
+                    <a href="./generate_paper.html"><li>Generate Paper</li></a>
+                    
+                </ul>
+            </div>
+
+            <div class="profile-card">
+                <div id="userDetails">
+                     <ul>
+                        <li><span id="username"></span></li>
+                        <li><span id="useremail"></span></li>
+                        <br>
+                        <hr>
+                        <br>
+                        <!-- unique identifier code -->
+                        <li>Secret Code (UID)</li> 
+                        <li><span id="uid"></span></li>
+                        <li>
+                            <button id="logoutButton">Logout</button>
+                        </li>
+                     </ul>
+                </div>
+            </div>
+        </div>
+        <div class="main-section">
+            <h1>Welcome,  <span id="username2"></span> !!</h1>
+        </div>
+
+    </section>
+
+
+
+
+</body>
+    <script>
+        const firebaseConfig = {
+            // Your Firebase configuration
+        };
+
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // Function to get a cookie
+        function getCookie(name) {
+            const cookieArr = document.cookie.split(";");
+            for (let i = 0; i < cookieArr.length; i++) {
+                const cookiePair = cookieArr[i].split("=");
+                if (name === cookiePair[0].trim()) {
+                    return decodeURIComponent(cookiePair[1]);
+                }
+            }
+            return null;
+        }
+
+        // Function to remove a cookie
+        function removeCookie(name) {
+            document.cookie = name + '=; Max-Age=-99999999; path=/';
+        }
+
+        window.onload = function() {
+            const uid = getCookie('uid');
+            if (!uid) {
+                window.location.href = "./login.html";
+                return;
+            }
+
+            db.collection("users").doc(uid).get().then(doc => {
+                if (doc.exists) {
+                    const userData = doc.data();
+                    document.getElementById("uid").textContent = userData.uid; 
+                    document.getElementById("username").textContent = userData.name; 
+                    document.getElementById("username2").textContent = userData.name; 
+                    document.getElementById("useremail").textContent = userData.email;
+                } else {
+                    console.log("No user data found!");
+                }
+            }).catch(error => {
+                console.error("Error fetching user data: ", error);
+            });
+        };
+
+        document.getElementById('logoutButton').addEventListener('click', function() {
+            removeCookie('uid');
+            alert("Logged out!");
+            window.location.href = "./login.html";
+        });
+    </script>
+</html>

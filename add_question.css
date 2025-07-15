@@ -1,0 +1,101 @@
+
+section {
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+/* Main Section Styling */
+.main-section {
+    flex: 1;
+    background-color: #fff;
+    overflow-y: auto;
+}
+
+.common-option {
+    display: flex;
+    gap: 15px;
+}
+
+#first-year-sem,#second-year-sem,#third-year-sem,#fourth-year-sem
+{
+    display: none;
+    border-radius: 5px;
+    cursor: pointer;
+
+}
+label
+{
+    font-size: 20px;
+}
+
+.add-subject-option select,.add-semester-option select,
+#first-year-sem select,#second-year-sem select,#third-year-sem select,#fourth-year-sem select{
+    padding: 10px 20px;
+    width: 200px; /* Ensure dropdowns use the full width */
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f8f9fa;
+    cursor: pointer;
+    transition: border-color 0.3s;
+}
+
+#first-year-sem select:hover,#second-year-sem select:hover,#third-year-sem select:hover,#fourth-year-sem select:hover{
+    border-color: #007bff;
+}
+
+input[type="file"] {
+    width: 180px;
+    padding: 10px;
+    margin-top: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f8f9fa;
+    display: block;
+    cursor: pointer;
+    transition: border-color 0.3s;
+    color: rgb(51, 2, 117);
+}
+
+input[type="file"]:hover {
+    border-color: #007bff;
+}
+
+.year-section {
+    display: none;
+}
+
+.first, .second, .third, .forth {
+    display: none; /* Hide all years by default */
+}
+
+.year-section.active {
+    display: block; /* Display the active year */
+}
+
+/* Custom Scrollbar */
+.main-section::-webkit-scrollbar {
+    width: 10px;
+}
+
+.main-section::-webkit-scrollbar-thumb {
+    background-color: #007bff;
+    border-radius: 5px;
+}
+
+.main-section::-webkit-scrollbar-track {
+    background-color: #f4f4f9;
+}
+
+button
+{
+    cursor: pointer;
+    margin-top: 20px;
+    padding: 10px 30px;
+    border-radius: 5px;
+    background-color: rgb(51, 2, 117);
+    color: white;
+    border: none;
+}
+button:hover{
+    background-color: rgb(51, 2, 117,0.9);
+}

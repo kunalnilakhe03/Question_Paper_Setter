@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="index.css">
+    <title>Generate Paper</title>
+
+    <!-- Load Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-firestore.js"></script>
+
+</head>
+
+
+
+<style>
+
+#criteriaForm {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    max-width: 500px;
+    margin: auto;
+}
+
+#criteriaForm label {
+    font-weight: bold;
+    margin-bottom: 8px;
+    display: block;
+}
+
+#criteriaForm select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+#criteriaForm button {
+    background-color: #007BFF;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+    width: 100%;
+}
+
+#criteriaForm button:hover {
+    background-color: #0056b3;
+}
+
+#criteriaForm .button {
+    text-align: center;
+}
+
+#criteriaForm h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+</style>
+<body>
+
+    <div class="wrapper" id="wrapper" onclick="hide()">
+        <div class="questionpaper" id="questionpaper">
+            <!-- The generated question paper will be displayed here -->
+        </div>
+
+    </div>
+
+
+    <section>
+        <div class="side-bar">
+            <div class="option">
+                <ul>
+                    <a href="./add_question.html">
+                        <li>Add Questions</li>
+                    </a>
+                    <a href="./view_question.html">
+                        <li>View Questions</li>
+                    </a>
+                    <a href="#">
+                        <li class="active">Generate Paper</li>
+                    </a>
+                </ul>
+            </div>
+
+            <div class="profile-card">
+                <div id="userDetails">
+                    <ul>
+                        <li><span id="username"></span></li>
+                        <li><span id="useremail"></span></li>
+                        <br>
+                        <hr>
+                        <br>
+                        <li>Secret Code (UID)</li>
+                        <li><span id="uid"></span></li>
+                        <li>
+                            <button id="logoutButton">Logout</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="main-section">
+            <br><br>
+            <h1>Generate Paper</h1>
+            <form id="criteriaForm">
+                <label for="year">Year:</label>
+                <select id="year" required>
+                    <option value="">Select Year</option>
+                    <option value="1st">1st Year</option>
+                    <option value="2nd">2nd Year</option>
+                    <option value="3rd">3rd Year</option>
+                    <option value="4th">4th Year</option>
+                </select><br><br>
+
+                <label for="semester">Semester:</label>
+                <select id="semester" required>
+                    <option value="">Select Semester</option>
+                    <option value="sem1">Semester 1</option>
+                    <option value="sem2">Semester 2</option>
+                    <option value="sem3">Semester 3</option>
+                    <option value="sem4">Semester 4</option>
+                    <option value="sem1">Semester 5</option>
+                    <option value="sem2">Semester 6</option>
+                    <option value="sem3">Semester 7</option>
+                    <option value="sem4">Semester 8</option>
+                </select><br><br>
+
+                <label for="subject">Subject:</label>
+                <select id="subject" required>
+
+
+                  <option value="maths">Maths</option>
+    <option value="physics">Physics</option>
+    <option value="chemistry">Chemistry</option>
+    <option value="mechanics">Mechanics</option>
+    <option value="beee">BEEE</option>
+
+    <option value=""></option>
+    <!-- Semester 2 -->
+    <option value="applied_mathematics_ii">Applied Mathematics II</option>
+    <option value="elective_physics">Elective Physics</option>
+    <option value="elective_chemistry">Elective Chemistry</option>
+    <option value="engineering_graphics">Engineering Graphics</option>
+    <option value="program_core_course">Program Core Course</option>
+
+    <option value=""></option>
+
+    <!-- Semester 3 -->
+    <option value="engineering_mathematics_iii">Engineering Mathematics III</option>
+    <option value="discrete_structures_and_graph_theory">Discrete Structures and Graph Theory</option>
+    <option value="data_structure">Data Structure</option>
+    <option value="digital_logic_computer_architecture">Digital Logic and Computer Architecture</option>
+    <option value="computer_graphics">Computer Graphics</option>
+
+    <option value=""></option>
+    <!-- Semester 4 -->
+    <option value="engineering_mathematics_iv">Engineering Mathematics IV</option>
+    <option value="analysis_of_algorithm">Analysis of Algorithm</option>
+    <option value="database_management_system">Database Management System</option>
+    <option value="operating_system">Operating System</option>
+    <option value="microprocessor">Microprocessor</option>
+
+    <option value=""></option>
+    <!-- Semester 5 -->
+    <option value="theoretical_computer_science">Theoretical Computer Science</option>
+    <option value="software_engineering">Software Engineering</option>
+    <option value="computer_network">Computer Network</option>
+    <option value="data_warehousing_and_mining">Data Warehousing and Mining</option>
+    <option value="department_level_optional_course_1">Department Level Optional Course 1</option>
+
+    <!-- Semester 6 -->
+    <option value=""></option>
+    <option value="system_programming_and_compiler_construction">System Programming and Compiler Construction</option>
+    <option value="cryptography_and_system_security">Cryptography and System Security</option>
+    <option value="mobile_computing">Mobile Computing</option>
+    <option value="artificial_intelligence">Artificial Intelligence</option>
+    <option value="department_level_optional_course_2">Department Level Optional Course 2</option>
+
+    <option value=""></option>
+    <!-- Semester 7 -->
+    <option value="machine_learning">Machine Learning</option>
+    <option value="big_data_analytics">Big Data Analytics</option>
+    <option value="department_level_optional_course_3">Department Level Optional Course 3</option>
+    <option value="department_level_optional_course_4">Department Level Optional Course 4</option>
+    <option value="department_level_optional_course_5">Department Level Optional Course 5</option>
+
+    <option value=""></option>
+    <!-- Semester 8 -->
+    <option value="project_management">Project Management</option>
+    <option value="internet_of_things">Internet of Things</option>
+    <option value="department_level_optional_course_6">Department Level Optional Course 6</option>
+    <option value="department_level_optional_course_7">Department Level Optional Course 7</option>
+    <option value="department_level_optional_course_8">Department Level Optional Course 8</option>
+
+
+
+
+
+                </select><br><br>
+
+                <label for="totalMarks">Total Marks:</label>
+<select id="totalMarks" required>
+    <option value="20">20 Marks</option>
+    <option value="60" disabled>60 Marks</option>
+</select><br><br>
+
+
+                <label for="difficulty">Difficulty:</label>
+                <select id="difficulty">
+                    <option value="" selected>All</option>
+                    <option value="easy">Easy</option>
+                    <option value="medium">Medium</option>
+                    <option value="hard">Hard</option>
+                </select>
+
+
+                <button type="submit">Generate Question Paper</button>
+            </form>
+
+        </div>
+
+
+
+    </section>
+
+
+    <script>
+        const firebaseConfig = {
+            // Your Firebase configuration
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // Function to get a cookie
+        function getCookie(name) {
+            const cookieArr = document.cookie.split(";");
+            for (let i = 0; i < cookieArr.length; i++) {
+                const cookiePair = cookieArr[i].split("=");
+                if (name === cookiePair[0].trim()) {
+                    return decodeURIComponent(cookiePair[1]);
+                }
+            }
+            return null;
+        }
+
+        // Function to remove a cookie
+        function removeCookie(name) {
+            document.cookie = name + '=; Max-Age=-99999999; path=/';
+        }
+
+        window.onload = function () {
+            const uid = getCookie('uid');
+            if (!uid) {
+                window.location.href = "./login.html";
+                return;
+            }
+
+            db.collection("users").doc(uid).get().then(doc => {
+                if (doc.exists) {
+                    const userData = doc.data();
+                    document.getElementById("uid").textContent = userData.uid;
+                    document.getElementById("username").textContent = userData.name;
+                    document.getElementById("useremail").textContent = userData.email;
+                } else {
+                    alert("No user data found for UID:", uid);
+                }
+            }).catch(error => {
+                alert("Error fetching user data: ", error);
+            });
+        };
+
+        document.getElementById('logoutButton').addEventListener('click', function () {
+            
+            removeCookie('uid');
+            alert("Logged out!");
+            window.location.href = "./login.html";
+        });
+
+        // Event listener for form submission
+        document.getElementById("criteriaForm").addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            const year = document.getElementById("year").value;
+            const semester = document.getElementById("semester").value;
+            const subject = document.getElementById("subject").value;
+            const totalMarks = parseInt(document.getElementById("totalMarks").value);
+            const difficulty = document.getElementById("difficulty").value;
+
+            generateQuestionPaper(year, semester, subject, totalMarks, difficulty);
+        });
+        function generateQuestionPaper(year, semester, subject, totalMarks, difficulty) {
+
+            const yearRef = db.collection("questions").doc(year);
+            const semesterRef = yearRef.collection("semesters").doc(semester);
+            const subjectRef = semesterRef.collection("subjects").doc(subject);
+
+            subjectRef.get().then((doc) => {
+                if (doc.exists) {
+                    const questions = doc.data().questions || [];
+
+                    const filteredQuestions = filterQuestions(questions, difficulty);
+
+                    const formattedPaper = formatQuestionPaper(filteredQuestions, totalMarks);
+                    document.getElementById("wrapper").style.display = "block";
+
+                } else {
+                    alert("No questions found for this subject.");
+                }
+            }).catch((error) => {
+                alert("Error accessing the database. Please try again.");
+            });
+        }
+
+        function filterQuestions(questions, difficulty) {
+            return questions.filter(question => {
+                const includeQuestion = difficulty ? question.difficulty === difficulty : true;
+                return includeQuestion;
+            });
+        }
+
+        function formatQuestionPaper(questions, totalMarks) {
+
+            if (totalMarks !== 20) {
+                return "This generator is configured for a 20 marks paper only.";
+            }
+
+            const oneMarkQuestions = questions.filter(q => q.marks === '1');
+            const fiveMarkQuestions = questions.filter(q => q.marks === '5');
+
+
+            // Check if we have enough questions
+            if (oneMarkQuestions.length < 5 || fiveMarkQuestions.length < 6) {
+                return "Not enough questions available to generate the paper for the selected criteria.";
+            }
+
+            // Shuffle function
+            function shuffle(array) {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]]; // Swap elements
+                }
+                return array;
+            }
+
+            // Select random questions
+            const selectedOneMarkQuestions = shuffle(oneMarkQuestions).slice(0, 5);
+            const selectedFiveMarkQuestions = shuffle(fiveMarkQuestions).slice(0, 6);
+            const paper = document.getElementById('questionpaper');
+
+            const sections = [];
+
+            // Create a single line break element to use throughout
+            const breakLine = document.createElement('br');
+            const header = document.createElement('img');
+
+            // Set the source of the image
+            header.src = './images/header.jpg';
+
+            // Optional: Set other attributes like alt text for better accessibility
+            header.alt = 'Header Image'; // Descriptive alt text
+            header.style.width = '100%'; // Optional: Make the image responsive
+
+            // Append the header image to the paper element
+            paper.appendChild(header);
+
+            // Create Section 1 for 1 Mark Questions
+            const sectionOneHeader = document.createElement('h3');
+            sectionOneHeader.textContent = "Section 1: 1 Mark Questions  Attempt All";
+            paper.appendChild(sectionOneHeader);
+
+            selectedOneMarkQuestions.forEach((q, index) => {
+                sections.push(`Q${index + 1}: ${q.question} (Marks: ${q.marks})`);
+                const questionElement = document.createElement('p');
+                questionElement.textContent = `Q${index + 1}: ${q.question} (Marks: ${q.marks})`;
+                paper.appendChild(questionElement);
+            });
+
+            // Create Sections 2 to 4 for 5 Mark Questions
+            for (let sectionIndex = 2; sectionIndex <= 4; sectionIndex++) {
+                const breakLine = document.createElement('br');
+                paper.appendChild(breakLine);
+                const sectionHeader = document.createElement('h3');
+                sectionHeader.textContent = `Section ${sectionIndex}: 5 Marks Questions. Attempt Any One`;
+                paper.appendChild(sectionHeader);
+
+                const startIdx = (sectionIndex - 2) * 2;
+                selectedFiveMarkQuestions.slice(startIdx, startIdx + 2).forEach((q, index) => {
+                    sections.push(`Q${index + 6}: ${q.question} (Marks: ${q.marks})`);
+                    const questionElement = document.createElement('p');
+                    questionElement.textContent = `Q${index + 6}: ${q.question} (Marks: ${q.marks})`;
+                    paper.appendChild(questionElement);
+
+                });
+            }
+            paper.appendChild(breakLine);
+            paper.appendChild(breakLine);
+            paper.appendChild(breakLine);
+            const questionElement = document.createElement('center');
+            questionElement.textContent = `------------ All The Best ------------`;
+            paper.appendChild(questionElement);
+
+            printQuestionPaper()
+            return sections.join("\n");
+        }
+
+        function hide() {
+            document.getElementById("wrapper").style.display = "none";
+            window.location.href = './generate_paper.html';
+        }
+
+        function printQuestionPaper() {
+            const wrapper = document.getElementById('wrapper'); // Get the wrapper div
+            const printWindow = window.open('', '', 'height=600,width=800'); // Open a new window
+
+            // Write the HTML of the wrapper to the new window
+            printWindow.document.write('<html><head><title>Question Paper Setter </title>');
+            printWindow.document.write('<style>body { font- family: Arial, sans - serif;} .wrapper h3, .wrapper p{padding - left: 100px;}</style>');
+            printWindow.document.write('</head><body>');
+            printWindow.document.write(wrapper.innerHTML); // Include the wrapper content
+            printWindow.document.write('</body></html>');
+
+            printWindow.document.close(); // Close the document
+            printWindow.print(); // Trigger the print dialog
+        }
+
+    </script>
+
+</body>
+
+</html>

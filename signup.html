@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <title>Signup</title>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-firestore.js"></script>
+    <!-- <script src="./check.js"></script> -->
+
+    <script>
+       const firebaseConfig = {
+            // Your Firebase configuration
+        };
+
+
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+      var db = firebase.firestore();
+      var auth = firebase.auth();
+
+      function setCookie(name, value, days) {
+        let expires = "";
+        if (days) {
+            const date = new Date();
+            date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+            expires = "; expires=" + date.toUTCString();
+        }
+        document.cookie = name + "=" + (value || "") + expires + "; path=/";
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        document
+          .getElementById("signupButton")
+          .addEventListener("click", function () {
+            var name = document.getElementById("name").value;
+            var email = document.getElementById("email").value;
+            var password = document.getElementById("password").value;
+            var confirmPassword =
+              document.getElementById("confirm_password").value;
+
+            if (password !== confirmPassword) {
+              alert("Passwords do not match!");
+              return;
+            }
+
+            let currentUser; // Define currentUser here
+
+            // Create a new user
+            auth
+              .createUserWithEmailAndPassword(email, password)
+              .then((userCredential) => {
+                // The userCredential contains the user object
+                currentUser = userCredential.user; // Assign to the outer variable
+
+                if (currentUser && currentUser.uid) {
+                  // Ensure that user.uid is valid before proceeding
+                  return db.collection("users").doc(currentUser.uid).set({
+                    name: name,
+                    email: email,
+                    uid: currentUser.uid,
+                  });
+                } else {
+                  throw new Error("User UID is undefined.");
+                }
+              })
+              .then(() => {
+                setCookie("uid", currentUser.uid, 7); // Use currentUser.uid here
+                window.location.href = "./index.html";
+              })
+              .catch((error) => {
+                console.error("Error during signup: ", error);
+                alert("Error: " + error.message);
+              });
+          });
+      });
+    </script>
+  </head>
+  <body>
+    <div class="login_wrapper">
+      <div class="login_form">
+        <span class="span"><h2>Signup</h2></span>
+        <input
+          type="text"
+          name="name"
+          id="name"
+          placeholder="Enter Your Name"
+        />
+        <input
+          type="email"
+          name="email"
+          id="email"
+          placeholder="Enter Your Email"
+        />
+        <input
+          type="password"
+          name="password"
+          id="password"
+          placeholder="Enter your Password"
+        />
+        <input
+          type="password"
+          name="confirm_password"
+          id="confirm_password"
+          placeholder="Confirm your Password"
+        />
+        <button id="signupButton">Signup</button>
+        <span><a href="./login.html">I have an account</a></span>
+      </div>
+    </div>
+  </body>
+</html>

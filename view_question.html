@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+    <link rel="stylesheet" href="./add_question.css">
+    <link rel="stylesheet" href="index.css">
+    <title>View Questions</title>
+
+    <!-- Load Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-firestore.js"></script>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+
+<section>
+    <div class="side-bar">
+        <div class="option">
+            <ul>
+                <a href="./add_question.html"><li>Add Questions</li></a>
+                <a href="#"><li class="active">View Questions</li></a>
+                <a href="./generate_paper.html"><li>Generate Paper</li></a>
+            </ul>
+        </div>
+
+        <div class="profile-card">
+            <div id="userDetails">
+                <ul>
+                    <li><span id="username"></span></li>
+                    <li><span id="useremail"></span></li>
+                    <br>
+                    <hr>
+                    <br>
+                    <li>Secret Code (UID)</li>
+                    <li><span id="uid"></span></li>
+                    <li>
+                        <button id="logoutButton">Logout</button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <div class="main-section">
+       
+        <div class="firstSection">
+             
+        <h1>Questions List</h1>
+        <div class="common-option">
+            <div class="add-subject-option">
+                <label for="year">Select Year:</label>
+                <select name="year" id="year">
+                    <option value="">Select the Year</option>
+                    <option value="1st">1st Year</option>
+                    <option value="2nd">2nd Year</option>
+                    <option value="3rd">3rd Year</option>
+                    <option value="4th">4th Year</option>
+                </select>
+            </div>
+
+            <div class="add-semester-option" id="semesterOptions" style="display: none;">
+                <label for="semester">Select Semester:</label>
+                <select name="semester" id="semester">
+                    <option value="">Select the Semester</option>
+                </select>
+            </div>
+
+            <div class="add-subject-option" id="subjectOptions" style="display: none;">
+                <label for="subject">Select Subject:</label>
+                <select name="subject" id="subject">
+                    <option value="">Select the Subject</option>
+                </select>
+            </div>
+        </div>
+        
+        <button id="viewQuestionsButton">View Questions</button>
+        
+        </div>
+<div class="secondSection">
+
+    <table class="overflow">
+        <thead>
+            <tr>
+                <th>Sr No</th>
+                <th>Question</th>
+                <th>Difficulty</th>
+                <th>Marks</th>
+                <th>Module</th>
+            </tr>
+        </thead>
+        <tbody id="questionsTable">
+
+            <!-- Questions will be dynamically inserted here -->
+        </tbody>
+    </table>
+</div>
+    </div>
+</section>
+
+<script>
+    // Firebase configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyCZHCkjsmuxqzfkjzPZxkOTS43L4m-gkh8",
+        authDomain: "questionpapersetter-3f7e9.firebaseapp.com",
+        databaseURL: "https://questionpapersetter-3f7e9-default-rtdb.firebaseio.com",
+        projectId: "questionpapersetter-3f7e9",
+        storageBucket: "questionpapersetter-3f7e9.appspot.com",
+        messagingSenderId: "1066636461976",
+        appId: "1:1066636461976:web:1e6c8522624bfb10a08ded",
+        measurementId: "G-D06YVGDFP0"
+      };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    // Function to get a cookie
+    function getCookie(name) {
+        const cookies = document.cookie.split("; ");
+        for (const cookie of cookies) {
+            const [key, value] = cookie.split("=");
+            if (key === name) {
+                return decodeURIComponent(value);
+            }
+        }
+        return null;
+    }
+
+    // Function to remove a cookie
+    function removeCookie(name) {
+        document.cookie = `${name}=; Max-Age=-99999999; path=/`;
+    }
+
+    // Function to fetch user data from Firestore
+    async function fetchUserData() {
+        const uid = getCookie("uid");
+        if (!uid) {
+            window.location.href = "./login.html";
+            return;
+        }
+
+        try {
+            const userDoc = await db.collection("users").doc(uid).get();
+            if (userDoc.exists) {
+                const userData = userDoc.data();
+                document.getElementById("uid").textContent = userData.uid;
+                document.getElementById("username").textContent = userData.name;
+                document.getElementById("useremail").textContent = userData.email;
+            } else {
+                console.error("No user data found!");
+            }
+        } catch (error) {
+            console.error("Error fetching user data: ", error);
+        }
+    }
+
+    // Function to handle logout
+    function handleLogout() {
+        removeCookie("uid");
+        alert("Logged out!");
+        window.location.href = "./login.html";
+    }
+
+    // Function to populate options in a dropdown
+    function populateOptions(selectElement, options) {
+        selectElement.innerHTML = '<option value="">Select</option>'; // Reset options
+        options.forEach(option => {
+            selectElement.innerHTML += `<option value="${option}">${option}</option>`;
+        });
+    }
+
+    // Event listeners for dropdowns
+    document.getElementById('year').addEventListener('change', function() {
+        const selectedYear = this.value;
+        const semesterSelect = document.getElementById('semester');
+        document.getElementById('subjectOptions').style.display = 'none'; // Hide subjects
+
+        const semesterOptions = {
+            '1st': ['sem1', 'sem2'],
+            '2nd': ['sem3', 'sem4'],
+            '3rd': ['sem5', 'sem6'],
+            '4th': ['sem7', 'sem8']
+        };
+
+        if (selectedYear) {
+            document.getElementById('semesterOptions').style.display = 'block';
+            populateOptions(semesterSelect, semesterOptions[selectedYear]);
+        } else {
+            document.getElementById('semesterOptions').style.display = 'none';
+        }
+    });
+
+    document.getElementById('semester').addEventListener('change', function() {
+        const selectedSemester = this.value;
+        const subjectSelect = document.getElementById('subject');
+
+        const subjectOptions = {
+            'sem1': ['maths', 'physics', 'chemistry', 'mechanics', 'beee'],
+            'sem2': ['applied_mathematics_ii', 'elective_physics', 'elective_chemistry', 'engineering_graphics', 'program_core_course'],
+            'sem3': ['engineering_mathematics_iii', 'discrete_structures_and_graph_theory', 'data_structure', 'digital_logic_computer_architecture', 'computer_graphics'],
+            'sem4': ['engineering_mathematics_iv', 'analysis_of_algorithm', 'database_management_system', 'operating_system', 'microprocessor'],
+            'sem5': ['theoretical_computer_science', 'software_engineering', 'computer_network', 'data_warehousing_and_mining', 'department_level_optional_course_1'],
+            'sem6': ['system_programming_and_compiler_construction', 'cryptography_and_system_security', 'mobile_computing', 'artificial_intelligence', 'department_level_optional_course_2'],
+            'sem7': ['machine_learning', 'big_data_analytics', 'department_level_optional_course_3', 'department_level_optional_course_4', 'department_level_optional_course_5'],
+            'sem8': ['project_management', 'internet_of_things', 'department_level_optional_course_6', 'department_level_optional_course_7', 'department_level_optional_course_8'],
+        };
+
+        if (selectedSemester) {
+            document.getElementById('subjectOptions').style.display = 'block';
+            populateOptions(subjectSelect, subjectOptions[selectedSemester]);
+        } else {
+            document.getElementById('subjectOptions').style.display = 'none';
+        }
+    });
+
+    window.onload = function () {
+        fetchUserData();
+    
+    
+        document.getElementById("viewQuestionsButton").addEventListener("click", async function() {
+            const selectedYear = document.getElementById("year").value; 
+            const selectedSemester = document.getElementById("semester").value; 
+            const selectedSubject = document.getElementById("subject").value; 
+            const questionsTableBody = document.getElementById("questionsTable");
+            questionsTableBody.innerHTML = ""; // Clear the table before inserting new data
+        
+            if (selectedYear && selectedSemester && selectedSubject) {
+                try {
+                    const subjectDoc = await db.collection("questions")
+                        .doc(selectedYear)
+                        .collection("semesters")
+                        .doc(selectedSemester)
+                        .collection("subjects")
+                        .doc(selectedSubject)
+                        .get();
+        
+                    if (subjectDoc.exists) {
+                        const subjectData = subjectDoc.data();
+                        const questions = subjectData.questions; // Assuming questions is an array in the document
+        
+                        console.log("Subject Data:", subjectData); // Debugging: Print subject data
+        
+                        // Check if questions exist and render them
+                        if (Array.isArray(questions) && questions.length > 0) {
+                            questions.forEach((questionData) => {
+                                console.log("Fetched Question:", questionData); // Debugging: Print each question
+        
+                                const row = document.createElement("tr");
+                                row.innerHTML = `
+                                    <td>${questionData.sr_no}</td>
+                                    <td aria-multiline="true">${questionData.question}</td>
+                                    <td>${questionData.difficulty}</td>
+                                    <td>${questionData.marks}</td>
+                                    <td>${questionData.module}</td>
+                                `;
+                                questionsTableBody.appendChild(row);
+                            });
+                        } else {
+                            console.log("No questions found for this subject.");
+                            questionsTableBody.innerHTML = "<tr><td colspan='5'>No questions found.</td></tr>";
+                        }
+                    } else {
+                        console.log("Subject document not found.");
+                        questionsTableBody.innerHTML = "<tr><td colspan='5'>Subject not found.</td></tr>";
+                    }
+                } catch (error) {
+                    console.error("Error fetching questions:", error);
+                }
+            } else {
+                alert("Please select Year, Semester, and Subject.");
+            }
+        });
+        
+
+
+    }
+</script>
+
+</body>
+</html>

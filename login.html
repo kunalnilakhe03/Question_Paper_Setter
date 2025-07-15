@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./style.css">
+    <title>Login</title>
+
+    <script type="module">
+        // Import Firebase modules
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js";
+
+        // Firebase configuration
+         const firebaseConfig = {
+            // Your Firebase configuration
+        };
+
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // Set cookie function
+        function setCookie(name, value, days) {
+            let expires = "";
+            if (days) {
+                const date = new Date();
+                date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+                expires = "; expires=" + date.toUTCString();
+            }
+            document.cookie = name + "=" + (value || "") + expires + "; path=/";
+        }
+
+        // Execute when the DOM content is fully loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("DOM fully loaded and parsed");
+
+            // Get the login button element
+            const loginButton = document.getElementById("loginButton");
+
+            // Add a click event listener to the login button
+            loginButton.addEventListener("click", function (event) {
+                event.preventDefault(); // Prevent the default form submission
+                console.log("Login button clicked");
+
+                // Get email and password values from input fields
+                const email = document.getElementById("email").value;
+                const password = document.getElementById("password").value;
+                
+                console.log(`Attempting login with email: ${email}`);
+                
+                // Use Firebase's signInWithEmailAndPassword function to authenticate
+                signInWithEmailAndPassword(auth, email, password)
+                    .then((userCredential) => {
+                        const user = userCredential.user;
+                        console.log("User logged in successfully", user);
+
+                        setCookie("uid", user.uid, 7); // Set a cookie with the user's UID
+                        window.location.href = "./index.html"; // Redirect to index.html
+                    })
+                    .catch((error) => {
+                        // Display an error message if authentication fails
+                        const errorMessage = error.message;
+                        console.error("Error during sign-in:", errorMessage);
+                        alert("Error: " + errorMessage);
+                    });
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="login_wrapper">
+        <div class="login_form">
+            <span class="span"><h2>Login</h2></span>
+            <input type="email" name="email" id="email" placeholder="Enter Your Email" required>
+            <input type="password" name="password" id="password" placeholder="Enter Your Password" required>
+            <button id="loginButton">
+                <span class="login-text">Login</span> 
+            </button>
+            <span><a href="./signup.html">I don't have an account</a></span>
+        </div>
+    </div>
+</body>
+</html>

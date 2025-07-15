@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="index.css" />
+    <link rel="stylesheet" href="add_question.css" />
+    <title>Add Questions</title>
+
+    <!-- Load Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-firestore.js"></script>
+</head>
+
+<body>
+    <section>
+        <div class="side-bar">
+            <div class="option">
+                <ul>
+                    <a href="#">
+                        <li class="active">Add Questions</li>
+                    </a>
+                    <a href="./view_question.html">
+                        <li>View Questions</li>
+                    </a>
+                    <a href="./generate_paper.html">
+                        <li>Generate Paper</li>
+                    </a>
+                </ul>
+            </div>
+
+            <div class="profile-card">
+                <div id="userDetails">
+                    <ul>
+                        <li><span id="username"></span></li>
+                        <li><span id="useremail"></span></li>
+                        <br />
+                        <hr />
+                        <br />
+                        <!-- unique identifier code -->
+                        <li>Secret Code (UID)</li>
+                        <li><span id="uid"></span></li>
+                        <li>
+                            <button id="logoutButton">Logout</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="main-section">
+            <div class="common-option">
+                <div class="add-subject-option">
+                    <label for="year">Select Year:</label>
+                    <select name="year" id="year">
+                        <option>Select the Subject</option>
+                        <option value="1st">1st Year</option>
+                        <option value="2nd">2nd Year</option>
+                        <option value="3rd">3rd Year</option>
+                        <option value="4th">4th Year</option>
+                    </select>
+                </div>
+
+                <div class="add-semester-option-first" id="first-year-sem">
+                    <label for="year">Select Semester:</label>
+                    <select name="semester" id="semester-fe">
+                        <option>Select the Semester</option>
+                        <option value="sem1">Semester 1</option>
+                        <option value="sem2">Semester 2</option>
+                    </select>
+                </div>
+                <div class="add-semester-option-second" id="second-year-sem">
+                    <label for="year">Select Semester:</label>
+                    <select name="semester" id="semester-se">
+                        <option>Select the Semester</option>
+                        <option value="sem3">Semester 3</option>
+                        <option value="sem4">Semester 4</option>
+                    </select>
+                </div>
+
+                <div class="add-semester-option-third" id="third-year-sem">
+                    <label for="year">Select Semester:</label>
+                    <select name="semester" id="semester-te">
+                        <option>Select the Semester</option>
+                        <option value="sem5">Semester 5</option>
+                        <option value="sem6">Semester 6</option>
+                    </select>
+                </div>
+
+                <div class="add-semester-option-fouth" id="fourth-year-sem">
+                    <label for="year">Select Semester:</label>
+                    <select name="semester" id="semester-be">
+                        <option>Select the Semester</option>
+                        <option value="sem7">Semester 7</option>
+                        <option value="sem8">Semester 8</option>
+                    </select>
+                </div>
+
+                <!-- Divisions for subjects based on year -->
+                <div class="year-section" id="first-year-sem1">
+                    <div class="add-subject-option">
+                        <label for="year">Select Subject:</label>
+                        <select name="subject1" class="subject-dropdown">
+                            <option>Select the Subject</option>
+                            <option value="maths">Applied Mathematics - I</option>
+                            <option value="physics">Applied Physics</option>
+                            <option value="chemistry">Applied Chemistry</option>
+                            <option value="mechanics">Engineering Mechanics</option>
+                            <option value="beee">Basic Electrical & Electronics Engineering </option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="year-section" id="first-year-sem2">
+                    <div class="add-subject-option">
+                        <label for="year">Select Subject:</label>
+                        <select name="subject1" class="subject-dropdown">
+                            <option>Select the Subject</option>
+                            <option value="applied_mathematics_ii">Applied Mathematics – II</option>
+                            <option value="elective_physics">Elective Physics</option>
+                            <option value="elective_chemistry">Elective Chemistry</option>
+                            <option value="engineering_graphics">Engineering Graphics</option>
+                            <option value="program_core_course">Program Core Course</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="year-section" id="second-year-sem3">
+                    <div class="add-subject-option">
+                        <label for="year">Select Subject:</label>
+                        <select name="subject2" class="subject-dropdown">
+                            <option>Select the Subject</option>
+                            <option value="engineering_mathematics_iii">Engineering Mathematics III</option>
+                            <option value="discrete_structures_and_graph_theory">Discrete Structures and Graph Theory</option>
+                            <option value="data_structure">Data Structure</option>
+                            <option value="digital_logic_computer_architecture">Digital Logic & Computer Architecture</option>
+                            <option value="computer_graphics">Computer Graphics</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="year-section" id="second-year-sem4">
+                    <div class="add-subject-option">
+                        <label for="year">Select Subject:</label>
+                        <select name="subject2" class="subject-dropdown">
+                            <option>Select the Subject</option>
+                            <option value="engineering_mathematics_iv">Engineering Mathematics IV</option>
+                            <option value="analysis_of_algorithm">Analysis of Algorithm</option>
+                            <option value="database_management_system">Database Management System</option>
+                            <option value="operating_system">Operating System</option>
+                            <option value="microprocessor">Microprocessor</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="year-section" id="third-year-sem5">
+                    <div class="add-subject-option">
+                        <label for="year">Select Subject:</label>
+                        <select name="subject3" class="subject-dropdown">
+                            <option>Select the Subject</option>
+                            <option value="theoretical_computer_science">Theoretical Computer Science</option>
+                            <option value="software_engineering">Software Engineering</option>
+                            <option value="computer_network">Computer Network</option>
+                            <option value="data_warehousing_and_mining">Data Warehousing & Mining</option>
+                            <option value="department_level_optional_course_1">Department Level Optional Course - 1</option>                            
+                        </select>
+                    </div>
+                </div>
+                <div class="year-section" id="third-year-sem6">
+                    <div class="add-subject-option">
+                        <label for="year">Select Subject:</label>
+                        <select name="subject3" class="subject-dropdown">
+                            <option>Select the Subject</option>
+                            <option value="system_programming_and_compiler_construction">System Programming & Compiler Construction</option>
+                            <option value="cryptography_and_system_security">Cryptography & System Security</option>
+                            <option value="mobile_computing">Mobile Computing</option>
+                            <option value="artificial_intelligence">Artificial Intelligence</option>
+                            <option value="department_level_optional_course_2">Department Level Optional Course - 2</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="year-section" id="fourth-year-sem7">
+                    <div class="add-subject-option">
+                        <label for="year">Select Subject:</label>
+                        <select name="subject4" class="subject-dropdown">
+                            <option>Select the Subject</option>
+                            <option value="machine_learning">Machine Learning</option>
+                            <option value="big_data_analytics">Big Data Analytics</option>
+                            <option value="department_level_optional_course_3">Department Level Optional Course - 3</option>
+                            <option value="department_level_optional_course_4">Department Level Optional Course - 4</option>
+                            <option value="institute_level_optional_course_1">Institute Level Optional Course - 1</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="year-section" id="fourth-year-sem8">
+                    <div class="add-subject-option">
+                        <label for="year">Select Subject:</label>
+                        <select name="subject4" class="subject-dropdown">
+                            <option>Select the Subject</option>
+                            <option value="human_machine_interaction">Human Machine Interaction</option>
+                            <option value="distributed_computing">Distributed Computing</option>
+                            <option value="department_level_optional_course_iv">Department Level Optional Course - IV</option>
+                            <option value="institute_level_optional_course_ii">Institute Level Optional Course - II</option>
+
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <input type="file" name="question-file" id="question_file" accept=".csv" />
+            
+        
+            <button id="submit">Add Questions</button>
+
+
+        </div>
+
+    </section>
+
+</body>
+
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyCZHCkjsmuxqzfkjzPZxkOTS43L4m-gkh8",
+        authDomain: "questionpapersetter-3f7e9.firebaseapp.com",
+        databaseURL: "https://questionpapersetter-3f7e9-default-rtdb.firebaseio.com",
+        projectId: "questionpapersetter-3f7e9",
+        storageBucket: "questionpapersetter-3f7e9.appspot.com",
+        messagingSenderId: "1066636461976",
+        appId: "1:1066636461976:web:1e6c8522624bfb10a08ded",
+        measurementId: "G-D06YVGDFP0"
+      };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    // Function to get a cookie
+    function getCookie(name) {
+        const cookieArr = document.cookie.split(";");
+        for (let i = 0; i < cookieArr.length; i++) {
+            const cookiePair = cookieArr[i].split("=");
+            if (name === cookiePair[0].trim()) {
+                return decodeURIComponent(cookiePair[1]);
+            }
+        }
+        return null;
+    }
+
+    // Function to remove a cookie
+    function removeCookie(name) {
+        document.cookie = name + "=; Max-Age=-99999999; path=/";
+    }
+
+    // On page load, check for user authentication
+    window.onload = function () {
+        const uid = getCookie("uid");
+        if (!uid) {
+            window.location.href = "./login.html";
+            return;
+        }
+
+        // Retrieve user data from Firestore
+        db.collection("users")
+            .doc(uid)
+            .get()
+            .then((doc) => {
+                if (doc.exists) {
+                    const userData = doc.data();
+                    document.getElementById("uid").textContent = userData.uid;
+                    document.getElementById("username").textContent = userData.name;
+                    document.getElementById("useremail").textContent = userData.email;
+                } else {
+                    console.log("No user data found!");
+                }
+            })
+            .catch((error) => {
+                console.error("Error fetching user data: ", error);
+            });
+
+        // Logout functionality
+        document
+            .getElementById("logoutButton")
+            .addEventListener("click", function () {
+                removeCookie("uid");
+                alert("Logged out!");
+                window.location.href = "./login.html";
+            });
+    };
+
+    // Event listener for year selection
+    document.getElementById("year").addEventListener("change", function () {
+        updateSemesterDropdown();
+        updateSubjectDropdown();
+    });
+
+    // Event listener for all semester selections
+    document.querySelectorAll('[id^="semester-"]').forEach((dropdown) => {
+        dropdown.addEventListener("change", function () {
+            updateSubjectDropdown();
+        });
+    });
+
+    // Function to update the visibility of semester dropdowns based on the selected year
+    function updateSemesterDropdown() {
+        const selectedYear = document.getElementById("year").value;
+
+        // Hide all semester dropdowns initially
+        document
+            .querySelectorAll(
+                ".add-semester-option-first, .add-semester-option-second, .add-semester-option-third, .add-semester-option-fouth"
+            )
+            .forEach((sem) => {
+                sem.style.display = "none";
+            });
+
+        if (selectedYear === "1st") {
+            document.getElementById("first-year-sem").style.display = "block";
+        } else if (selectedYear === "2nd") {
+            document.getElementById("second-year-sem").style.display = "block";
+        } else if (selectedYear === "3rd") {
+            document.getElementById("third-year-sem").style.display = "block";
+        } else if (selectedYear === "4th") {
+            document.getElementById("fourth-year-sem").style.display = "block";
+        }
+    }
+
+    // Function to update the subject dropdown based on the selected year and semester
+    function updateSubjectDropdown() {
+        const selectedYear = document.getElementById("year").value;
+
+        let selectedSemester = null;
+        if (selectedYear === "1st") {
+            selectedSemester = document.getElementById("semester-fe").value;
+        } else if (selectedYear === "2nd") {
+            selectedSemester = document.getElementById("semester-se").value;
+        } else if (selectedYear === "3rd") {
+            selectedSemester = document.getElementById("semester-te").value;
+        } else if (selectedYear === "4th") {
+            selectedSemester = document.getElementById("semester-be").value;
+        }
+
+        // Hide all subject dropdowns initially
+        document.querySelectorAll(".year-section").forEach((section) => {
+            section.style.display = "none";
+        });
+
+        // Show the appropriate subject dropdown based on year and semester
+        if (selectedYear === "1st" && selectedSemester === "sem1") {
+            document.getElementById("first-year-sem1").style.display = "block";
+        } else if (selectedYear === "1st" && selectedSemester === "sem2") {
+            document.getElementById("first-year-sem2").style.display = "block";
+        } else if (selectedYear === "2nd" && selectedSemester === "sem3") {
+            document.getElementById("second-year-sem3").style.display = "block";
+        } else if (selectedYear === "2nd" && selectedSemester === "sem4") {
+            document.getElementById("second-year-sem4").style.display = "block";
+        } else if (selectedYear === "3rd" && selectedSemester === "sem5") {
+            document.getElementById("third-year-sem5").style.display = "block";
+        } else if (selectedYear === "3rd" && selectedSemester === "sem6") {
+            document.getElementById("third-year-sem6").style.display = "block";
+        } else if (selectedYear === "4th" && selectedSemester === "sem7") {
+            document.getElementById("fourth-year-sem7").style.display = "block";
+        } else if (selectedYear === "4th" && selectedSemester === "sem8") {
+            document.getElementById("fourth-year-sem8").style.display = "block";
+        }
+    }
+    
+    
+    // (Your existing Firebase configuration and initialization code here)
+
+    // Function to handle the "Add Questions" button click
+    document.getElementById("submit").addEventListener("click", submitQuestions);
+
+    function submitQuestions() {
+        const selectedYear = document.getElementById("year").value;
+        let selectedSemester = null;
+
+        // Determine which semester dropdown to use based on the selected year
+        if (selectedYear === "1st") {
+            selectedSemester = document.getElementById("semester-fe").value;
+        } else if (selectedYear === "2nd") {
+            selectedSemester = document.getElementById("semester-se").value;
+        } else if (selectedYear === "3rd") {
+            selectedSemester = document.getElementById("semester-te").value;
+        } else if (selectedYear === "4th") {
+            selectedSemester = document.getElementById("semester-be").value;
+        }
+
+        // Get the selected subject
+        let selectedSubject = null;
+        if (selectedYear === "1st" && selectedSemester === "sem1") {
+            selectedSubject = document.querySelector('#first-year-sem1 .subject-dropdown').value;
+        } else if (selectedYear === "1st" && selectedSemester === "sem2") {
+            selectedSubject = document.querySelector('#first-year-sem2 .subject-dropdown').value;
+        } else if (selectedYear === "2nd" && selectedSemester === "sem3") {
+            selectedSubject = document.querySelector('#second-year-sem3 .subject-dropdown').value;
+        } else if (selectedYear === "2nd" && selectedSemester === "sem4") {
+            selectedSubject = document.querySelector('#second-year-sem4 .subject-dropdown').value;
+        } else if (selectedYear === "3rd" && selectedSemester === "sem5") {
+            selectedSubject = document.querySelector('#third-year-sem5 .subject-dropdown').value;
+        } else if (selectedYear === "3rd" && selectedSemester === "sem6") {
+            selectedSubject = document.querySelector('#third-year-sem6 .subject-dropdown').value;
+        } else if (selectedYear === "4th" && selectedSemester === "sem7") {
+            selectedSubject = document.querySelector('#fourth-year-sem7 .subject-dropdown').value;
+        } else if (selectedYear === "4th" && selectedSemester === "sem8") {
+            selectedSubject = document.querySelector('#fourth-year-sem8 .subject-dropdown').value;
+        }
+
+        // Get the CSV file
+        const fileInput = document.getElementById("question_file");
+        const file = fileInput.files[0];
+
+        if (!selectedYear || !selectedSemester || !selectedSubject || !file) {
+            alert("Please select year, semester, subject, and upload a file.");
+            return;
+        }
+
+        // Read the CSV file
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            const csvData = e.target.result;
+            const questions = parseCSV(csvData); // Function to parse CSV data
+            saveQuestionsToFirestore(selectedYear, selectedSemester, selectedSubject, questions);
+        };
+        reader.readAsText(file);
+    }
+
+    // Function to parse CSV data into questions
+    function parseCSV(data) {
+        const rows = data.split("\n");
+        const questions = [];
+        
+        // Assuming the first row contains the headers
+        rows.forEach((row, index) => {
+            if (index === 0) return; // Skip header row
+    
+            const cols = row.split(","); // Adjust the delimiter as needed
+            if (cols.length >= 5) { // Ensure there are enough columns
+                questions.push({
+                    marks: cols[4].trim(),
+                    module: cols[3].trim(),
+                    difficulty: cols[2].trim(),
+                    question: cols[1].trim(),
+                    sr_no: cols[0].trim(),
+                });
+            }
+        });
+    
+        return questions;
+    }
+    function saveQuestionsToFirestore(year, semester, subject, questions) {
+        console.log("Saving questions for:", year, semester, subject);
+    
+        const yearRef = db.collection("questions").doc(year);
+        const semesterRef = yearRef.collection("semesters").doc(semester);
+        const subjectRef = semesterRef.collection("subjects").doc(subject);
+    
+        subjectRef.get().then((doc) => {
+            if (doc.exists) {
+                const existingQuestions = doc.data().questions || [];
+    
+
+                const updatedQuestions = addNewQuestions(existingQuestions, questions);
+    
+                subjectRef.set({ questions: updatedQuestions })
+                    .then(() => {
+                        alert("New questions added successfully!");
+                    })
+                    .catch((error) => {
+                        alert("Error adding questions. Please try again.");
+                    });
+            } else {
+                subjectRef.set({ questions: questions })
+                    .then(() => {
+                        alert("Questions added successfully!");
+                    })
+                    .catch((error) => {
+                        alert("Error adding questions. Please try again.");
+                    });
+            }
+        }).catch((error) => {
+            alert("Error accessing the database. Please try again.");
+        });
+    }
+    
+    function addNewQuestions(existingQuestions, newQuestions) {
+        const mergedQuestions = [...existingQuestions];
+    
+        newQuestions.forEach(newQuestion => {
+            const existingIndex = mergedQuestions.findIndex(q => q.sr_no === newQuestion.sr_no);
+    
+            if (existingIndex === -1) {
+                mergedQuestions.push(newQuestion);
+            } else {
+                mergedQuestions[existingIndex] = { ...mergedQuestions[existingIndex], ...newQuestion };
+            }
+        });
+
+        return mergedQuestions;
+    }
+    
+    
+</script>
+
+</html>
